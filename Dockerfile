@@ -59,13 +59,10 @@ RUN apt-get update && apt-get install -y \
     wget \
     cron \
     supervisor \
-    libc-client2007e-dev \
-    libkrb5-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install -j$(nproc) \
         pdo \
         pdo_mysql \
@@ -77,8 +74,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         gd \
         zip \
         intl \
-        opcache \
-        imap
+        opcache
 
 # Enable Apache modules
 RUN a2enmod rewrite headers expires deflate ssl
@@ -97,7 +93,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
 # Install dependencies and build assets
-RUN composer install --no-dev --optimize-autoloader --no-interaction \
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=ext-imap \
     && npm ci --only=production \
     && npm run build \
     && rm -rf node_modules
