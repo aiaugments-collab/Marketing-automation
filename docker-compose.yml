@@ -2,140 +2,73 @@ version: '3.8'
 
 services:
   mautic:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: mautic-app
-    restart: unless-stopped
+    ports:
+      - "80:80"
     environment:
-      # App Environment
       - APP_ENV=prod
       - APP_DEBUG=0
-      
-      # Database Configuration
-      - MAUTIC_DB_DRIVER=pdo_mysql
-      - MAUTIC_DB_HOST=${DB_HOST:-db}
-      - MAUTIC_DB_PORT=${DB_PORT:-3306}
-      - MAUTIC_DB_NAME=${DB_NAME:-mautic}
-      - MAUTIC_DB_USER=${DB_USER:-mautic}
-      - MAUTIC_DB_PASSWORD=${DB_PASSWORD}
-      - MAUTIC_DB_TABLE_PREFIX=${DB_TABLE_PREFIX:-}
-      
-      # Site Configuration
-      - MAUTIC_SITE_URL=${SITE_URL}
-      - MAUTIC_SECRET_KEY=${SECRET_KEY}
-      - MAUTIC_LOCALE=${LOCALE:-en_US}
-      - MAUTIC_TIMEZONE=${TIMEZONE:-UTC}
-      
-      # Request Context (automatically handled by SiteUrlEnvVars)
-      - MAUTIC_REQUEST_CONTEXT_HOST=${REQUEST_CONTEXT_HOST}
-      - MAUTIC_REQUEST_CONTEXT_SCHEME=${REQUEST_CONTEXT_SCHEME:-https}
-      - MAUTIC_REQUEST_CONTEXT_BASE_URL=${REQUEST_CONTEXT_BASE_URL:-}
-      - MAUTIC_REQUEST_CONTEXT_HTTP_PORT=${REQUEST_CONTEXT_HTTP_PORT:-80}
-      - MAUTIC_REQUEST_CONTEXT_HTTPS_PORT=${REQUEST_CONTEXT_HTTPS_PORT:-443}
-      
-      # Email Configuration
-      - MAUTIC_MAILER_DSN=${MAILER_DSN:-smtp://localhost:1025}
-      - MAUTIC_MAILER_FROM_NAME=${MAILER_FROM_NAME:-Mautic}
-      - MAUTIC_MAILER_FROM_EMAIL=${MAILER_FROM_EMAIL:-mautic@example.com}
-      
-      # Messenger Configuration  
-      - MAUTIC_MESSENGER_DSN_EMAIL=${MESSENGER_DSN_EMAIL:-doctrine://default}
-      - MAUTIC_MESSENGER_DSN_HIT=${MESSENGER_DSN_HIT:-doctrine://default}
-      - MAUTIC_MESSENGER_DSN_FAILED=${MESSENGER_DSN_FAILED:-doctrine://default}
-      
-      # Session Configuration
-      - MAUTIC_SESSION_NAME=${SESSION_NAME:-mautic_session}
-      
-      # Cache and Performance
-      - MAUTIC_CACHE_ADAPTER=${CACHE_ADAPTER:-cache.adapter.filesystem}
-      - MAUTIC_CACHE_REDIS_HOST=${REDIS_HOST:-redis}
-      - MAUTIC_CACHE_REDIS_PORT=${REDIS_PORT:-6379}
-      - MAUTIC_CACHE_REDIS_PASSWORD=${REDIS_PASSWORD:-}
-      
-      # ElFinder Configuration
-      - MAUTIC_EL_FINDER_PATH=/var/www/html/media
-      - MAUTIC_EL_FINDER_URL=/media
-      
-      # API Configuration
-      - MAUTIC_API_ENABLED=${API_ENABLED:-true}
-      - MAUTIC_API_ENABLE_BASIC_AUTH=${API_ENABLE_BASIC_AUTH:-true}
-      - MAUTIC_API_OAUTH2_ACCESS_TOKEN_LIFETIME=${API_OAUTH2_ACCESS_TOKEN_LIFETIME:-3600}
-      - MAUTIC_API_OAUTH2_REFRESH_TOKEN_LIFETIME=${API_OAUTH2_REFRESH_TOKEN_LIFETIME:-1209600}
-      
-      # Security
-      - MAUTIC_TRUSTED_HOSTS=${TRUSTED_HOSTS:-}
-      - MAUTIC_TRUSTED_PROXIES=${TRUSTED_PROXIES:-}
-      - MAUTIC_COOKIE_SECURE=${COOKIE_SECURE:-true}
-      - MAUTIC_COOKIE_HTTPONLY=${COOKIE_HTTPONLY:-true}
-      - MAUTIC_COOKIE_PATH=${COOKIE_PATH:-/}
-      - MAUTIC_COOKIE_DOMAIN=${COOKIE_DOMAIN:-}
-      
-      # Branding
-      - MAUTIC_BRAND_NAME=${BRAND_NAME:-Your Brand}
-      - MAUTIC_PRIMARY_BRAND_COLOR=${PRIMARY_BRAND_COLOR:-6b63b8}
-      - MAUTIC_THEME=${THEME:-blank}
-      
-      # Performance
-      - MAUTIC_DEFAULT_PAGELIMIT=${DEFAULT_PAGELIMIT:-30}
-      - MAUTIC_MAX_LOG_FILES=${MAX_LOG_FILES:-7}
-      
-      # IP Lookup
-      - MAUTIC_IP_LOOKUP_SERVICE=${IP_LOOKUP_SERVICE:-maxmind_download}
-      - MAUTIC_IP_LOOKUP_AUTH=${IP_LOOKUP_AUTH:-}
-      
-      # Migrations
-      - MAUTIC_MIGRATIONS_TABLE_NAME=${MIGRATIONS_TABLE_NAME:-migration_versions}
-      
-      # Maintenance
-      - MAUTIC_UPDATE_STABILITY=${UPDATE_STABILITY:-stable}
-      
+      - MAUTIC_DB_HOST=db
+      - MAUTIC_DB_PORT=3306
+      - MAUTIC_DB_NAME=${MAUTIC_DB_NAME:-mautic}
+      - MAUTIC_DB_USER=${MAUTIC_DB_USER:-mautic}
+      - MAUTIC_DB_PASSWORD=${MAUTIC_DB_PASSWORD}
+      - MAUTIC_DB_PREFIX=${MAUTIC_DB_PREFIX:-}
+      - MAUTIC_ADMIN_USERNAME=${MAUTIC_ADMIN_USERNAME:-admin}
+      - MAUTIC_ADMIN_PASSWORD=${MAUTIC_ADMIN_PASSWORD:-Maut1cR0cks!}
+      - MAUTIC_ADMIN_EMAIL=${MAUTIC_ADMIN_EMAIL}
+      - MAUTIC_ADMIN_FIRSTNAME=${MAUTIC_ADMIN_FIRSTNAME:-Admin}
+      - MAUTIC_ADMIN_LASTNAME=${MAUTIC_ADMIN_LASTNAME:-User}
+      - MAUTIC_MAILER_TRANSPORT=${MAUTIC_MAILER_TRANSPORT:-smtp}
+      - MAUTIC_MAILER_HOST=${MAUTIC_MAILER_HOST}
+      - MAUTIC_MAILER_PORT=${MAUTIC_MAILER_PORT:-587}
+      - MAUTIC_MAILER_USER=${MAUTIC_MAILER_USER}
+      - MAUTIC_MAILER_PASSWORD=${MAUTIC_MAILER_PASSWORD}
+      - MAUTIC_MAILER_ENCRYPTION=${MAUTIC_MAILER_ENCRYPTION:-tls}
+      - MAUTIC_MAILER_AUTH_MODE=${MAUTIC_MAILER_AUTH_MODE:-login}
+      - MAUTIC_SITE_URL=${MAUTIC_SITE_URL}
+      - MAUTIC_SECRET_KEY=${MAUTIC_SECRET_KEY}
+      - MAUTIC_REQUEST_CONTEXT_HOST=${MAUTIC_REQUEST_CONTEXT_HOST}
+      - MAUTIC_REQUEST_CONTEXT_SCHEME=${MAUTIC_REQUEST_CONTEXT_SCHEME:-https}
+      - MAUTIC_TRUSTED_HOSTS=${MAUTIC_TRUSTED_HOSTS}
+      - MAUTIC_TRUSTED_PROXIES=${MAUTIC_TRUSTED_PROXIES}
     volumes:
       - mautic_media:/var/www/html/media
       - mautic_var:/var/www/html/var
-    ports:
-      - "80:80"
     depends_on:
       - db
-      - redis
+    restart: unless-stopped
     networks:
-      - mautic_network
+      - mautic-network
 
   db:
     image: mariadb:10.11
     container_name: mautic-db
-    restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME:-mautic}
-      - MYSQL_USER=${DB_USER:-mautic}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_CHARSET=utf8mb4
-      - MYSQL_COLLATION=utf8mb4_unicode_ci
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${MAUTIC_DB_NAME:-mautic}
+      - MYSQL_USER=${MAUTIC_DB_USER:-mautic}
+      - MYSQL_PASSWORD=${MAUTIC_DB_PASSWORD}
     volumes:
-      - mautic_db:/var/lib/mysql
-      - ./docker/mysql.cnf:/etc/mysql/conf.d/mautic.cnf
+      - mautic_db_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - mautic_network
-
-  redis:
-    image: redis:7-alpine
-    container_name: mautic-redis
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_PASSWORD:-mautic_redis}
-    volumes:
-      - mautic_redis:/data
-    ports:
-      - "6379:6379"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_allowed_packet=1073741824
     networks:
-      - mautic_network
+      - mautic-network
 
 volumes:
+  mautic_db_data:
+    driver: local
   mautic_media:
+    driver: local
   mautic_var:
-  mautic_db:
-  mautic_redis:
+    driver: local
 
 networks:
-  mautic_network:
+  mautic-network:
     driver: bridge
