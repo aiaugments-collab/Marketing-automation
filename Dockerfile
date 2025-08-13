@@ -59,10 +59,13 @@ RUN apt-get update && apt-get install -y \
     wget \
     cron \
     supervisor \
+    libc-client-dev \
+    libkrb5-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install -j$(nproc) \
         pdo \
         pdo_mysql \
@@ -74,7 +77,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         gd \
         zip \
         intl \
-        opcache
+        opcache \
+        imap
 
 # Enable Apache modules
 RUN a2enmod rewrite headers expires deflate ssl
