@@ -2,41 +2,32 @@
 
 This Mautic installation is now ready for deployment on Coolify! 🚀
 
-## 📋 Pre-Deployment Setup
+**Domain:** https://automate.augment.cfd
 
-### 1. Environment Variables in Coolify
+## 🎯 **Quick Deploy - Only 3 Required Variables!**
 
-Set these environment variables in your Coolify application settings:
+The Dockerfile includes defaults for your domain, so you only need to set these **3 essential variables** in Coolify:
 
-#### **Database Configuration**
+#### **Required Environment Variables**
 ```
-MAUTIC_DB_HOST=your_database_host
-MAUTIC_DB_NAME=mautic
-MAUTIC_DB_USER=mautic_user
 MAUTIC_DB_PASSWORD=your_secure_db_password
-MYSQL_ROOT_PASSWORD=your_root_password
+MYSQL_ROOT_PASSWORD=your_root_password  
+MAUTIC_SECRET_KEY=your_32_character_secret_key
 ```
 
-#### **Admin User (for initial setup)**
-```
-MAUTIC_ADMIN_EMAIL=admin@yourdomain.com
-MAUTIC_ADMIN_PASSWORD=Maut1cR0cks!
-```
-
-#### **Email Configuration**
+#### **Optional (if you want to override defaults)**
 ```
 MAUTIC_MAILER_HOST=your_smtp_host
 MAUTIC_MAILER_USER=your_smtp_username
 MAUTIC_MAILER_PASSWORD=your_smtp_password
 ```
 
-#### **Site Configuration**
-```
-MAUTIC_SITE_URL=https://yourdomain.com
-MAUTIC_SECRET_KEY=your_32_character_secret_key
-MAUTIC_REQUEST_CONTEXT_HOST=yourdomain.com
-MAUTIC_TRUSTED_HOSTS=yourdomain.com,www.yourdomain.com
-```
+### ✅ **Already Set in Dockerfile:**
+- ✅ Domain: `https://automate.augment.cfd`
+- ✅ Admin email: `admin@augment.cfd`
+- ✅ Admin password: `Maut1cR0cks!`
+- ✅ Trusted hosts: `automate.augment.cfd`
+- ✅ All other Mautic settings
 
 ### 2. Generate Secret Key
 
