@@ -1,0 +1,35 @@
+# Mautic cron jobs
+# Process scheduled campaigns, segments, and other background tasks
+
+# Segments update - every hour
+0 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:segments:update --env=prod --no-interaction --quiet
+
+# Campaigns update - every 5 minutes  
+*/5 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:campaigns:update --env=prod --no-interaction --quiet
+
+# Process email queue - every 5 minutes
+*/5 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:emails:send --env=prod --no-interaction --quiet
+
+# Import data - every 15 minutes
+*/15 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:import --env=prod --no-interaction --quiet
+
+# Process webhook queue - every 5 minutes
+*/5 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:webhooks:process --env=prod --no-interaction --quiet
+
+# Social monitoring - every 15 minutes
+*/15 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:social:monitoring --env=prod --no-interaction --quiet
+
+# Broadcast messages - every 5 minutes
+*/5 * * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:broadcasts:send --env=prod --no-interaction --quiet
+
+# Maintenance cleanup - daily at 2:30 AM
+30 2 * * * www-data /usr/local/bin/php /var/www/html/bin/console mautic:maintenance:cleanup --no-interaction --quiet --days-old=365
+
+# Update MaxMind GeoLite2 database - weekly on Sunday at 3:00 AM
+0 3 * * 0 www-data /usr/local/bin/php /var/www/html/bin/console mautic:iplookup:download --env=prod --no-interaction --quiet
+
+# Messenger consume (if using messenger)
+# Uncomment if you want to use Symfony Messenger for async processing
+# * * * * * www-data /usr/local/bin/php /var/www/html/bin/console messenger:consume email hit --env=prod --time-limit=3600 --memory-limit=128M --quiet
+
+# Empty line at end of file required for cron

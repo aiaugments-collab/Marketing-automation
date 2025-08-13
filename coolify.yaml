@@ -1,0 +1,88 @@
+# Coolify Configuration for Mautic
+# This file helps Coolify understand how to deploy your Mautic application
+
+services:
+  mautic:
+    image: mautic:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      # These will be automatically mapped from Coolify's environment variables
+      APP_ENV: prod
+      APP_DEBUG: 0
+    volumes:
+      - "mautic_media:/var/www/html/media"
+      - "mautic_var:/var/www/html/var"
+    depends_on:
+      - db
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-mautic}
+      MYSQL_USER: ${DB_USER:-mautic}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "mautic_db:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD:-mautic_redis}
+    volumes:
+      - "mautic_redis:/data"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mautic_media:
+  mautic_var:
+  mautic_db:
+  mautic_redis:
+
+# Coolify-specific configurations
+x-coolify:
+  # Domains that should be automatically configured
+  domains:
+    - "${SERVICE_FQDN_MAUTIC}"
+  
+  # Health check configuration
+  healthcheck:
+    path: "/"
+    port: 80
+    interval: 30
+    
+  # Resource limits
+  resources:
+    limits:
+      memory: 2G
+      cpus: 1.0
+    reservations:
+      memory: 512M
+      cpus: 0.5
+      
+  # Backup configuration
+  backup:
+    enabled: true
+    volumes:
+      - mautic_media
+      - mautic_var
+      - mautic_db
